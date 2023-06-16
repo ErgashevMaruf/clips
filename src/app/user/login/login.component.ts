@@ -1,0 +1,39 @@
+import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  showAlert = false;
+  alertMessage = 'Please wait! We are logging you in';
+  alertColor = 'blue'
+  inSubmission = false;
+  constructor(public auth: AngularFireAuth) {
+
+  }
+  data = {
+    email: '',
+    password: ''
+  }
+  async login() {
+    this.showAlert = true;
+    this.alertMessage = 'Please wait! We are logging you in';
+    this.alertColor = 'blue'
+    this.inSubmission = true;
+    try {
+      await this.auth.signInWithEmailAndPassword(this.data.email, this.data.password);
+    }
+    catch (e) {
+      this.alertMessage = 'Unexpected Error occurs';
+      this.alertColor = 'red';
+      this.inSubmission = false
+
+      return
+    }
+    this.alertColor = 'green'
+    this.alertMessage = 'You successfully login'
+  }
+}
